@@ -1,0 +1,18 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer components {
+  .input {
+    @apply bg-slate-100 rounded-md p-[0.5rem] focus:outline-none focus:border border focus:border-[#7752FE];
+  }
+  .balance-card {
+    @apply bg-white rounded-md shadow-md p-[2rem] text-center;
+  }
+  .balance-title {
+    @apply pb-[2rem];
+  }
+  .balance-amnt {
+    @apply text-[#7752FE] font-[1000] text-2xl;
+  }
+}
