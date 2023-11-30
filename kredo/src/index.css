@@ -13,6 +13,6 @@
     @apply pb-[2rem];
   }
   .balance-amnt {
-    @apply text-[#7752FE] font-[1000] text-2xl;
+    @apply text-[#7752FE] font-[700] text-xl;
   }
 }

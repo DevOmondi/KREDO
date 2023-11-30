@@ -1,12 +1,14 @@
-import Login from "./login/Login";
+// import Login from "./login/Login";
 // import Dashboard from "./dashboard/Dashboard";
-function App() {
-  return (
-    <div className="font-nunito">
-      <Login/>
-      {/* <Dashboard/> */}
-    </div>
-  );
-}
+// import ChangePassword from "./password_change/ChangePassword";
+// function App() {
+//   return (
+//     <div className="font-nunito">
+//       <Login/>
+//       <Dashboard/>
+//       <ChangePassword/>
+//     </div>
+//   );
+// }
 
-export default App;
+// export default App;

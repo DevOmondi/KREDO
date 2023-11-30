@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <style>
+      a {
+        text-decoration: none;
+        color: #1b1ba2;
+      }
+    </style>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Transaction failed</title>
+  </head>
+  <body
+    style="
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      box-sizing: border-box;
+      display: grid;
+      background-color: #fff;
+      place-items: center;
+      overflow: hidden;
+      position: relative;
+    "
+  >
+    <main
+      style="
+        width: auto;
+        padding: 1rem 2rem;
+        border-radius: 10px;
+        margin: 0 auto;
+        margin-top: 1rem;
+        background-color: #ecf0f3;
+        box-shadow: 6px 6px 6px #cbced1, -2px -2px 4px #cbced1;
+      "
+    >
+      <p style="margin: 0.5rem 0.5rem">Hi,</p>
+      <div style="margin: 0 0.5rem">
+        <p style="margin: 0.5rem 0rem">
+          The following transaction failed at _TRANSACTION_TIME_.
+        </p>
+        <p style="margin: 0.5rem 0rem">
+          <p style="margin: 0.5rem"
+            >Transaction Number: _TRANSACTION_NUMBER_</p
+          >
+          <p style="margin: 0.5rem">Amount: _TRANSACTION_AMOUNT_</p>
+        </p>
+        <p style="margin: 0.5rem 0rem; text-align:center;">Open link below to manually process it.</p>
+        <a
+          href="_REDIRECT_LINK_"
+          style="
+            margin-top: 1rem;
+            text-align: center;
+            width: auto;
+            display: block;
+          "
+        >
+          <button
+            style="
+              cursor: pointer;
+              color: #f3b41b;
+              background-color: #133d59;
+              border-color: #133d59;
+              border: 1px solid transparent;
+              padding: 0.2rem 0.75rem;
+              margin: 0.75rem 5px;
+              font-size: 1rem;
+              line-height: 1.5;
+              border-radius: 10px;
+              width: 12rem;
+            "
+          >
+            Process Manually !
+          </button>
+        </a>
+      </div>
+    </main>
+    <footer style="margin-top: 2rem; text-align: center; width: 100%">
+      <p>
+        <a href="_UNSUBSCRIBE_EMAILS_LINK_">Unsubscribe | </a>
+        <a href="_PRIVACY_POLICY_LINK_">Privacy Policy | </a>
+        <a href="_LANDING_PAGE_">BinaryPay</a>
+      </p>
+      <p>
+        <small> &copy;</small>
+        <script>
+          document.write(new Date().getFullYear());
+        </script>
+        BinaryPay Solutions. All Rights Reserved.
+      </p>
+    </footer>
+  </body>
+</html>

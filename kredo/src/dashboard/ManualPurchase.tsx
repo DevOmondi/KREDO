@@ -108,7 +108,7 @@ const ManualPurchase = () => {
   };
   return (
     <div className="lg:w-[85%] mt-[1rem] shadow-md lg:mx-auto bg-white rounded-md p-[2rem]">
-      <p className="text-[#7752FE] w-[90%] font-[1000] mb-[1rem] mx-auto md:mx-0 text-3xl">
+      <p className="text-[#7752FE] w-[90%] font-[700] mb-[1rem] mx-auto md:mx-0 text-2xl">
         Manual Purchase
       </p>
       <div className="flex flex-col md:flex-row lg:items-end lg:justify-between">

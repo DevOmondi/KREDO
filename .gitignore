@@ -1,0 +1,8 @@
+node_modules
+backend/.env
+.env
+# build
+*.pem
+*.log
+validation.txt
+confirmation.txt
