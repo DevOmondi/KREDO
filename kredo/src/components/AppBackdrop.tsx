@@ -6,6 +6,7 @@ import {
   useDisclosure,
   Spinner,
 } from "@chakra-ui/react";
+
 import { useState, useEffect } from "react";
 
 export default function AppBackdrop() {
@@ -19,14 +20,14 @@ export default function AppBackdrop() {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [overlay, setOverlay] = useState(<OverlayOne />);
 
-//   TODO: Func to open Backdrop
- function openBackdrop(){
+  //   TODO: Func to open Backdrop
+  function openBackdrop() {
     setOverlay(<OverlayOne />);
     onOpen();
- }
- useEffect(()=>{
-    openBackdrop()
- },[])
+  }
+  useEffect(() => {
+    openBackdrop();
+  }, []);
   return (
     <div className="font-nunito">
       <Modal isCentered isOpen={isOpen} onClose={onClose}>

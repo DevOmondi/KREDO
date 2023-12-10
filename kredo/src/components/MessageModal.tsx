@@ -8,11 +8,11 @@ import {
   Button,
   useDisclosure,
 } from "@chakra-ui/react";
+
 import { useEffect } from "react";
 
 interface componentProps {
   message: string;
-  title: string;
   close: ()=>void
 }
 export default function MessageModal(props: componentProps) {
@@ -25,7 +25,7 @@ export default function MessageModal(props: componentProps) {
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
         <ModalContent>
-          <ModalHeader>{props.title}</ModalHeader>
+          <ModalHeader>Hey!</ModalHeader>
           <ModalBody>{props.message}</ModalBody>
           <ModalFooter>
             <Button colorScheme="blue" mr={3} onClick={props.close}>

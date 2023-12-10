@@ -1,135 +1,117 @@
-import { CompactTable } from '@table-library/react-table-library/compact';
-import { useTheme } from '@table-library/react-table-library/theme';
-import { DEFAULT_OPTIONS, getTheme } from '@table-library/react-table-library/chakra-ui';
-import { useRowSelect } from '@table-library/react-table-library/select';
-import { Box, Checkbox } from '@chakra-ui/react';
-const list = [
-  {
-    id: "1",
-    name: "VSCode",
-    deadline: new Date(2020, 1, 17),
-    type: "SETUP",
-    isComplete: true,
-  },
-  {
-    id: "2",
-    name: "JavaScript",
-    deadline: new Date(2020, 2, 28),
-    type: "LEARN",
-    isComplete: true,
-  },
-  {
-    id: "3",
-    name: "React",
-    deadline: new Date(2020, 3, 8),
-    type: "LEARN",
-    isComplete: false,
-  },
-];
-const DataTable = () => {
-  const data = { list };
+import "ag-grid-community/styles/ag-grid.css";
+import "ag-grid-community/styles/ag-theme-quartz.css";
+import { AgGridReact } from "ag-grid-react";
 
-  const chakraTheme = getTheme(DEFAULT_OPTIONS);
-  const customTheme = {
-    Table: `
-      --data-table-library_grid-template-columns:  64px repeat(5, minmax(0, 1fr));
-    `,
-  };
-  const theme = useTheme([chakraTheme, customTheme]);
+import { useMemo, useState } from "react";
 
-  const select = useRowSelect(data, {
-    onChange: onSelectChange,
+import {
+  ColDef,
+  ICellRendererParams,
+  ValueFormatterParams,
+} from "ag-grid-community";
+import "ag-grid-community/styles/ag-grid.css"; // Core CSS
+import "ag-grid-community/styles/ag-theme-quartz.css"; // Theme
+
+/* Custom Cell Renderer (Display tick / cross in 'Purchase Successful' column) */
+const MissionResultRenderer = (params: ICellRendererParams) => (
+  <span
+    style={{
+      display: "flex",
+      justifyContent: "center",
+      height: "100%",
+      alignItems: "center",
+    }}
+  >
+    {
+      <img
+        alt={`${params.value}`}
+        src={`https://www.ag-grid.com/example-assets/icons/${
+          params.value ? "tick-in-circle" : "cross-in-circle"
+        }.png`}
+        style={{ width: "auto", height: "auto" }}
+      />
+    }
+  </span>
+);
+
+/* Format Date Cells */
+const dateFormatter = (params: ValueFormatterParams): string => {
+  return new Date(params.value).toLocaleDateString("en-us", {
+    weekday: "long",
+    year: "numeric",
+    month: "short",
+    day: "numeric",
   });
+};
+// interface GridReadyEvent<TData = any, TContext = any> {
+//   // The grid api. 
+//   api: GridApi<TData>;
+//   // Application context as set on `gridOptions.context`. 
+//   context: TContext;
+//   // Event identifier 
+//   type: string;
+// }
+const DataTable = (props) => {
+  // Column Definitions.
+  const [colDefs] = useState<ColDef[]>([
+    {
+      field: "updatedAt",
+      headerName: "Date",
+      width: 250,
+      valueFormatter: dateFormatter,
+      checkboxSelection: true,
+    },
+    {
+      field: "ref",
+      headerName: "REF",
+      width: 200,
+    },
+    {
+      field: "accountNumber",
+      headerName: "Phone No",
+      width: 225,
+    },
+    {
+      field: "amount",
+      headerName: "Amount",
+      width: 130,
+    },
+    {
+      field: "statusComplete",
+      headerName: "Purchase Successful?",
+      width: 200,
+      cellRenderer: MissionResultRenderer,
+    },
+  ]);
 
-  function onSelectChange(action, state) {
-    console.log(action, state);
-  }
-
-  const COLUMNS = [
-    {
-      label: 'Task',
-      renderCell: (item) => item.name,
-      select: {
-        renderHeaderCellSelect: () => (
-          <Checkbox
-            colorScheme="teal"
-            isChecked={select.state.all}
-            isIndeterminate={!select.state.all && !select.state.none}
-            onChange={select.fns.onToggleAll}
-          />
-        ),
-        renderCellSelect: (item) => (
-          <Checkbox
-            colorScheme="teal"
-            isChecked={select.state.ids.includes(item.id)}
-            onChange={() => select.fns.onToggleById(item.id)}
-          />
-        ),
-      },
-    },
-    {
-      label: 'Deadline',
-      renderCell: (item) =>
-        item.deadline.toLocaleDateString('en-US', {
-          year: 'numeric',
-          month: '2-digit',
-          day: '2-digit',
-        }),
-    },
-    { label: 'Type', renderCell: (item) => item.type },
-    {
-      label: 'Complete',
-      renderCell: (item) => item.isComplete.toString(),
-    },
-    // { label: 'Tasks', renderCell: (item) => item.nodes?.length },
-  ];
+  // Apply settings across all columns
+  const defaultColDef = useMemo<ColDef>(() => {
+    return {
+      filter: true,
+      editable: true,
+    };
+  }, []);
 
   return (
-    <>
-      <Box p={3} borderWidth="1px" borderRadius="lg">
-        <CompactTable columns={COLUMNS} data={data} theme={theme} select={select} />
-      </Box>
-    </>
+    <div className="font-nunito">
+      <div
+        className={"ag-theme-quartz font-nunito"}
+        style={{ width: "100%", height: "20rem" }}
+      >
+        <AgGridReact
+          rowData={props?.rowData}
+          columnDefs={colDefs}
+          defaultColDef={defaultColDef}
+          pagination={true}
+          rowSelection="multiple"
+          onSelectionChanged={(event) => console.log(event)}
+          onCellValueChanged={(event) =>
+            console.log(`New Cell Value: ${event.value}`)
+          }
+        />
+      </div>
+    </div>
   );
 };
 
 export default DataTable;
-// import { CompactTable } from '@table-library/react-table-library/compact';
-
-// const nodes = [
-//   {
-//     id: '0',
-//     name: 'Shopping List',
-//     deadline: new Date(2020, 1, 15),
-//     type: 'TASK',
-//     isComplete: true,
-//     nodes: 3,
-//   },
-// ];
-
-// const COLUMNS = [
-//   { label: 'Task', renderCell: (item) => item.name },
-//   {
-//     label: 'Deadline',
-//     renderCell: (item) =>
-//       item.deadline.toLocaleDateString('en-US', {
-//         year: 'numeric',
-//         month: '2-digit',
-//         day: '2-digit',
-//       }),
-//   },
-//   { label: 'Type', renderCell: (item) => item.type },
-//   {
-//     label: 'Complete',
-//     renderCell: (item) => item.isComplete.toString(),
-//   },
-//   { label: 'Tasks', renderCell: (item) => item.nodes },
-// ];
-
-// const Component = () => {
-//   const data = { nodes };
-
-//   return <CompactTable columns={COLUMNS} data={data} />;
-// };
-
-// export default Component;

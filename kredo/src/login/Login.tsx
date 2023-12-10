@@ -2,6 +2,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import config from "../config";
+
 import {
   Flex,
   Box,
@@ -15,15 +16,15 @@ import {
   Text,
   useColorModeValue,
 } from "@chakra-ui/react";
+
 import AppBackdrop from "../components/AppBackdrop";
 import MessageModal from "../components/MessageModal";
 
 export default function Login() {
-  // Input states management
+  // states management
   const [userName, setUserName] = useState("");
   const [passWord, setPassWord] = useState("");
   const [modalMessage, setModalMessage] = useState("");
-  const [modalTitle, setModalTitle] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const navigate = useNavigate(); //Instantiate navigate
@@ -31,7 +32,6 @@ export default function Login() {
   const loginHandler = (event: React.MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
     if (!userName || !passWord) {
-      setModalTitle("Oopsie!! missing Credentials");
       setModalMessage("Please fill in all the credentials :(");
       setShowModal(true);
     } else {
@@ -51,7 +51,6 @@ export default function Login() {
         .then(({ response, processed }) => {
           if (response && processed) {
             if (processed?.errorMessage) {
-              setModalTitle("Oopsie!! We ran into an issue");
               setModalMessage(processed?.errorMessage);
               setShowModal(true);
             }
@@ -85,13 +84,7 @@ export default function Login() {
   }
   return (
     <div className="font-nunito">
-      {showModal && (
-        <MessageModal
-          message={modalMessage}
-          title={modalTitle}
-          close={closeModal}
-        />
-      )}
+      {showModal && <MessageModal message={modalMessage} close={closeModal} />}
       <Flex
         minH={"100vh"}
         align={"center"}

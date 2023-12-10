@@ -1,8 +1,11 @@
 // import React from 'react'
 import { useState } from "react";
-// import axios from "axios";
-// import config from "../config";
+import axios from "axios";
+import config from "../config";
 import { Button } from "@chakra-ui/react";
+
+import MessageModal from "../components/MessageModal";
+import AppBackdrop from "../components/AppBackdrop";
 
 const ManualPurchase = () => {
   // services object
@@ -48,7 +51,10 @@ const ManualPurchase = () => {
   const [accountNumber, setAccountNumber] = useState("");
   const [amountPaid, setAmountPaid] = useState("");
   const [payload, setPayload] = useState<payloadObj>(initialPayloadObj);
-  //   const [isLoading, setIsLoading] = useState(false);
+
+  const [isLoading, setIsLoading] = useState(false);
+  const [modalMessage, setModalMessage] = useState("");
+  const [showModal, setShowModal] = useState(false);
   //   TODO: Func to handle service change
   const changeServiceFunc = (event: React.ChangeEvent<HTMLSelectElement>) => {
     const _service = event.target.value;
@@ -59,7 +65,7 @@ const ManualPurchase = () => {
   };
   //   TODO: Func to handle purchase
   const purchaseHandler = (event: React.MouseEvent<HTMLButtonElement>) => {
-    // const authTkn = sessionStorage.getItem("tkn");
+    const authTkn = sessionStorage.getItem("tkn");
     event.preventDefault();
     if (
       !accountNumber ||
@@ -67,105 +73,109 @@ const ManualPurchase = () => {
       !payload?.serviceCode ||
       !payload?.serviceID
     ) {
-      return alert("Sorry! Some deails are missing.");
+      setModalMessage("Sorry! Some deails are missing.");
+      setShowModal(true);
+    } else {
+      // console.log("Payload is:", payload);
+      setIsLoading(true);
+      axios
+        .post(
+          `${config.API_URL}/api/transaction/purchase`,
+          {
+            accountNumber: accountNumber,
+            amountPaid: amountPaid,
+            serviceCode: payload.serviceCode,
+            serviceID: payload.serviceID,
+          },
+          { headers: { Authorization: `${authTkn}` } }
+        )
+        .then((response) => {
+          if (response.status === 200) {
+            setTimeout(function () {
+              setModalMessage("Transaction completed successfully!! :)");
+              setShowModal(true);
+            }, 3000);
+          }
+        })
+        .catch((error) => {
+          setTimeout(function () {
+            // console.log(error);
+            setModalMessage(
+              `Ow Snap!!! looks like something went wrong :(, ${error}`
+            );
+          }, 3000);
+        });
     }
-    console.log("Payload is:", payload);
-    // setIsLoading(true);
-    // axios
-    //   .post(
-    //     `${config.API_URL}/api/transaction/purchase`,
-    //     {
-    //       accountNumber: accountNumber,
-    //       amountPaid: amountPaid,
-    //       serviceCode: payload.serviceCode,
-    //       serviceID: payload.serviceID,
-    //     },
-    //     { headers: { Authorization: `${authTkn}` } }
-    //   )
-    //   .then((response) => {
-    //     if (response.status === 200) {
-    //       setTimeout(function () {
-    //         return alert(
-    //           "Transaction completed successfully!! :)"
-    //           //   handleAlertClick()
-    //         );
-    //       }, 3000);
-    //     }
-    //   })
-    //   .catch((error) => {
-    //     setTimeout(function () {
-    //       console.log(error);
-    //       return alert(
-    //         "Ow Snap!!! looks like something went wrong :("
-    //         // handleAlertClick()
-    //       );
-    //     }, 3000);
-    //   });
-    //function to stop loading after "ok" click on alert
-    // const handleAlertClick = () => {
-    //   setIsLoading(false);
-    // };
   };
+  // TODO: Func to close modal
+  function closeModal() {
+    setShowModal(false);
+    setIsLoading(false);
+  }
   return (
-    <div className="lg:w-[85%] mt-[1rem] shadow-md lg:mx-auto bg-white rounded-md p-[2rem]">
-      <p className="text-[#7752FE] w-[90%] font-[700] mb-[1rem] mx-auto md:mx-0 text-2xl">
-        Manual Purchase
-      </p>
-      <div className="flex flex-col md:flex-row lg:items-end lg:justify-between">
-        <div className="flex md:gap-[7rem] gap-[1rem] flex-col md:flex-row w-[90%] mx-auto md:mx-0">
-          {/* Phone number */}
-          <div>
-            <label>Enter Phone number</label>
-            <input
-              type="text"
-              placeholder="e.g 254xxxxxxxxx"
-              className="input"
-              onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
-                setAccountNumber(event.target.value)
-              }
-            />
-          </div>
-          {/* Service */}
-          <div>
-            <label htmlFor="services">Type of Service</label>
-            <select
-              id="services"
-              className="input"
-              onChange={changeServiceFunc}
-              defaultValue=""
-            >
-              <option value="" hidden disabled>
-                --select service--
-              </option>
-              {Object.keys(services).map((_service) => (
-                <option key={_service} value={_service}>
-                  {_service}
+    <div>
+      {isLoading && <AppBackdrop />}
+      {showModal && <MessageModal message={modalMessage} close={closeModal} />}
+      <div className="lg:w-[85%] mt-[1rem] shadow-md lg:mx-auto bg-white rounded-md p-[2rem]">
+        <p className="text-[#7752FE] w-[90%] font-[700] mb-[1rem] mx-auto md:mx-0 text-2xl">
+          Manual Purchase
+        </p>
+        <div className="flex flex-col md:flex-row lg:items-end lg:justify-between">
+          <div className="flex md:gap-[7rem] gap-[1rem] flex-col md:flex-row w-[90%] mx-auto md:mx-0">
+            {/* Phone number */}
+            <div>
+              <label>Enter Phone number</label>
+              <input
+                type="text"
+                placeholder="e.g 254xxxxxxxxx"
+                className="input"
+                onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
+                  setAccountNumber(event.target.value)
+                }
+              />
+            </div>
+            {/* Service */}
+            <div>
+              <label htmlFor="services">Type of Service</label>
+              <select
+                id="services"
+                className="input"
+                onChange={changeServiceFunc}
+                defaultValue=""
+              >
+                <option value="" hidden disabled>
+                  --select service--
                 </option>
-              ))}
-            </select>
+                {Object.keys(services).map((_service) => (
+                  <option key={_service} value={_service}>
+                    {_service}
+                  </option>
+                ))}
+              </select>
+            </div>
+            {/* Amount */}
+            <div>
+              <label>Enter Amount</label>
+              <input
+                type="number"
+                className="input"
+                onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
+                  setAmountPaid(event.target.value)
+                }
+              />
+            </div>
           </div>
-          {/* Amount */}
-          <div>
-            <label>Enter Amount</label>
-            <input
-              type="number"
-              className="input"
-              onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
-                setAmountPaid(event.target.value)
-              }
-            />
-          </div>
+          <Button
+            size="sm"
+            bg={"primary.default"}
+            color={"white"}
+            _hover={{ bg: "primary.hover" }}
+            className="mt-[1rem] mx-[5%]"
+            onClick={purchaseHandler}
+          >
+            Purchase
+          </Button>
         </div>
-        <Button
-          size="sm"
-          bg={"primary.default"}
-          color={"white"}
-          _hover={{ bg: "primary.hover" }}
-          className="mt-[1rem] mx-[5%]"
-          onClick={purchaseHandler}
-        >
-          Purchase
-        </Button>
       </div>
     </div>
   );
