@@ -29,7 +29,7 @@ router.use("/test", (req, res) => {
 // frontend routes
 //to enable react routing
 router.use((req, res, next) => {
-  res.sendFile(path.join(__dirname, "../binary-pay/build/index.html"));
+  res.sendFile(path.join(__dirname, "../kredo/build/index.html"));
 });
 
 module.exports = router;

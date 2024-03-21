@@ -44,12 +44,16 @@ const dateFormatter = (params: ValueFormatterParams): string => {
   });
 };
 // interface GridReadyEvent<TData = any, TContext = any> {
-//   // The grid api. 
+//   // The grid api.
 //   api: GridApi<TData>;
-//   // Application context as set on `gridOptions.context`. 
+//   // Application context as set on `gridOptions.context`.
 //   context: TContext;
-//   // Event identifier 
+//   // Event identifier
 //   type: string;
+// }
+// // Disable selection of successful purchases
+// interface IsRowSelectable<TData = any> {
+//   (node: IRowNode<TData>) : boolean
 // }
 const DataTable = (props) => {
   // Column Definitions.
@@ -104,7 +108,9 @@ const DataTable = (props) => {
           defaultColDef={defaultColDef}
           pagination={true}
           rowSelection="multiple"
+          rowMultiSelectWithClick={true}
           onSelectionChanged={(event) => console.log(event)}
+          // onSelectionChanged={}
           onCellValueChanged={(event) =>
             console.log(`New Cell Value: ${event.value}`)
           }
